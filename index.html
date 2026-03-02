@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AURA-GRID | AI-Powered Intelligent Traffic Management</title>
+  <meta name="description" content="AURA-GRID uses AI vision, dynamic signal optimization, and verified green corridors to save lives, secure convoys, and reduce urban congestion." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="home.css" />
+</head>
+<body>
+  <div class="grid-bg"></div>
+  <div class="noise-overlay"></div>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-logo">
+      <div class="logo-icon">⬡</div>
+      <span><span class="accent">AURA</span>-GRID</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#hero" class="active">Home</a></li>
+      <li><a href="#problem">Problem</a></li>
+      <li><a href="#pillars">Solution</a></li>
+      <li><a href="#flows">User Flows</a></li>
+      <li><a href="#tech">Architecture</a></li>
+      <li><a href="#faq">Q&amp;A</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="dashboard.html" class="btn btn-secondary btn-sm">Live Dashboard</a>
+      <a href="portal.html" class="btn btn-primary btn-sm">🔒 Green Corridor</a>
+    </div>
+  </nav>
+
+  <!-- ─────────────────────────────────────── -->
+  <!--  HERO SECTION                          -->
+  <!-- ─────────────────────────────────────── -->
+  <section class="hero" id="hero">
+    <div class="glow-blob glow-blob-cyan" style="width:600px;height:600px;top:-200px;left:-100px;opacity:0.6;"></div>
+    <div class="glow-blob glow-blob-violet" style="width:500px;height:500px;top:-100px;right:-150px;opacity:0.5;"></div>
+
+    <div class="container hero-inner">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="status-dot green"></span>
+          <span>FLOW-AI Engine — Online</span>
+          <span class="badge badge-cyan">v1.0 Prototype</span>
+        </div>
+
+        <h1 class="hero-title">
+          Intelligent Traffic<br />
+          That <span class="highlight-text">Saves Lives</span><br />
+          in Real Time
+        </h1>
+
+        <p class="hero-desc">
+          AURA-GRID fuses AI vision, predictive preemption, and verified green corridors
+          to clear the path for ambulances, secure VVIP convoys, and optimize
+          every intersection in the city — automatically.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#pillars" class="btn btn-primary btn-lg">
+            <span>Explore The Solution</span>
+            <span>→</span>
+          </a>
+          <a href="dashboard.html" class="btn btn-secondary btn-lg">
+            <span>🖥 View Live Dashboard</span>
+          </a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <span class="stat-value" data-target="94">0</span><span class="stat-unit">%</span>
+            <span class="stat-label">Emergency Response Improvement</span>
+          </div>
+          <div class="stat-sep"></div>
+          <div class="hero-stat">
+            <span class="stat-value" data-target="3">0</span><span class="stat-unit">s</span>
+            <span class="stat-label">Corridor Activation Time</span>
+          </div>
+          <div class="stat-sep"></div>
+          <div class="hero-stat">
+            <span class="stat-value" data-target="40">0</span><span class="stat-unit">%</span>
+            <span class="stat-label">Urban Congestion Reduction</span>
+          </div>
+          <div class="stat-sep"></div>
+          <div class="hero-stat">
+            <span class="stat-value" data-target="95">0</span><span class="stat-unit">%+</span>
+            <span class="stat-label">YOLO Detection Accuracy</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero visual: animated intersection -->
+      <div class="hero-visual" aria-hidden="true">
+        <div class="intersection-demo">
+          <div class="road road-h"></div>
+          <div class="road road-v"></div>
+          <div class="intersection-center"></div>
+
+          <!-- Traffic lights at each arm -->
+          <div class="tl-pos tl-top">
+            <div class="tl-signal" id="tl-n">
+              <div class="tl-light active-red" id="tl-n-r"></div>
+              <div class="tl-light" id="tl-n-a"></div>
+              <div class="tl-light" id="tl-n-g"></div>
+            </div>
+          </div>
+          <div class="tl-pos tl-bottom">
+            <div class="tl-signal" id="tl-s">
+              <div class="tl-light active-red" id="tl-s-r"></div>
+              <div class="tl-light" id="tl-s-a"></div>
+              <div class="tl-light" id="tl-s-g"></div>
+            </div>
+          </div>
+          <div class="tl-pos tl-left">
+            <div class="tl-signal tl-signal-h" id="tl-w">
+              <div class="tl-light" id="tl-w-r"></div>
+              <div class="tl-light" id="tl-w-a"></div>
+              <div class="tl-light active-green" id="tl-w-g"></div>
+            </div>
+          </div>
+          <div class="tl-pos tl-right">
+            <div class="tl-signal tl-signal-h" id="tl-e">
+              <div class="tl-light" id="tl-e-r"></div>
+              <div class="tl-light" id="tl-e-a"></div>
+              <div class="tl-light active-green" id="tl-e-g"></div>
+            </div>
+          </div>
+
+          <!-- Ambulance icon moving through -->
+          <div class="ambulance-icon" id="hero-ambulance">🚑</div>
+
+          <!-- AI scan line -->
+          <div class="ai-scan-line"></div>
+
+          <!-- Overlay info -->
+          <div class="demo-info">
+            <div class="demo-status">
+              <span class="status-dot green"></span>
+              <span class="mono" style="font-size:0.75rem;">AI CAMERA ONLINE</span>
+            </div>
+            <div class="demo-detect">
+              <span class="badge badge-red" id="detect-badge">🚨 AMBULANCE DETECTED</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Surrounding data panels -->
+        <div class="data-panel dp-tl card">
+          <div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:4px;">NORTH LANE</div>
+          <div class="progress-bar"><div class="progress-fill red" style="width:82%;"></div></div>
+          <div style="font-size:0.75rem;font-weight:700;color:var(--accent-red);margin-top:4px;">82% Dense</div>
+        </div>
+        <div class="data-panel dp-tr card">
+          <div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:4px;">EAST LANE</div>
+          <div class="progress-bar"><div class="progress-fill green" style="width:23%;"></div></div>
+          <div style="font-size:0.75rem;font-weight:700;color:var(--accent-green);margin-top:4px;">23% Dense</div>
+        </div>
+        <div class="data-panel dp-bl card">
+          <div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:4px;">YOLO DETECT</div>
+          <div style="font-size:0.72rem;color:var(--accent-cyan);font-family:var(--font-mono);">Class: Ambulance</div>
+          <div style="font-size:0.72rem;color:var(--accent-green);font-family:var(--font-mono);">Conf: 97.2%</div>
+        </div>
+        <div class="data-panel dp-br card">
+          <div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:4px;">GREEN WAVE ETA</div>
+          <div style="font-size:1.4rem;font-weight:900;color:var(--accent-green);font-family:var(--font-mono);">00:03</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="g-divider"></div>
+
+  <!-- ─────────────────────────────────────── -->
+  <!--  PROBLEM STATEMENT                     -->
+  <!-- ─────────────────────────────────────── -->
+  <section class="section" id="problem">
+    <div class="glow-blob glow-blob-red" style="width:400px;height:400px;top:50%;right:0;opacity:0.15;background:rgba(255,59,92,0.15);"></div>
+    <div class="container">
+      <div class="section-label">The Crisis</div>
+      <h2 class="section-title">Every Second of Delay<br /><span class="highlight">Costs Lives</span></h2>
+      <p class="section-desc">Traditional "dumb" traffic grids are killing the golden hour, endangering VVIPs, and choking cities with preventable congestion.</p>
+
+      <div class="problem-grid">
+        <div class="problem-card card">
+          <div class="problem-icon" style="background:rgba(255,59,92,0.15);color:var(--accent-red);">🏥</div>
+          <h3>The Golden Hour Crisis</h3>
+          <p>Ambulances spend <strong style="color:var(--accent-red);">10–15%</strong> of travel time idling at red lights — directly cutting into the critical 60-minute survival window after trauma.</p>
+          <div class="problem-stat">
+            <span class="stat-value-sm" style="color:var(--accent-red);">12.5%</span>
+            <span>average journey wasted at intersections</span>
+          </div>
+        </div>
+
+        <div class="problem-card card">
+          <div class="problem-icon" style="background:rgba(255,184,0,0.15);color:var(--accent-amber);">🛡️</div>
+          <h3>VVIP Security Vulnerabilities</h3>
+          <p>Convoys stopped at red lights become <strong style="color:var(--accent-amber);">static targets</strong>. Traditional methods deploy hundreds of police hours in advance, disrupting the entire city.</p>
+          <div class="problem-stat">
+            <span class="stat-value-sm" style="color:var(--accent-amber);">100s</span>
+            <span>of officers needed for manual road blocks</span>
+          </div>
+        </div>
+
+        <div class="problem-card card">
+          <div class="problem-icon" style="background:rgba(0,245,255,0.10);color:var(--accent-cyan);">🚗</div>
+          <h3>Inefficient "Dumb" Grids</h3>
+          <p>Fixed-timer PLCs keep lanes green even when <strong style="color:var(--accent-cyan);">completely empty</strong>, burning millions of gallons of fuel annually and creating localized pollution spikes.</p>
+          <div class="problem-stat">
+            <span class="stat-value-sm" style="color:var(--accent-cyan);">Millions</span>
+            <span>of gallons wasted annually from idle signals</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="g-divider"></div>
+
+  <!-- ─────────────────────────────────────── -->
+  <!--  THREE PILLARS                         -->
+  <!-- ─────────────────────────────────────── -->
+  <section class="section" id="pillars">
+    <div class="glow-blob glow-blob-cyan" style="width:500px;height:500px;top:0;left:50%;transform:translateX(-50%);opacity:0.4;"></div>
+    <div class="container">
+      <div class="section-label">The Solution</div>
+      <h2 class="section-title">Three-Pillar<br /><span class="highlight">Architecture</span></h2>
+      <p class="section-desc">AURA-GRID operates on three synergistic layers, each solving a distinct failure mode of traditional traffic systems.</p>
+
+      <div class="pillars-layout">
+        <!-- Pillar A -->
+        <div class="pillar-card card card-glow-cyan">
+          <div class="pillar-letter" style="background: linear-gradient(135deg,rgba(0,245,255,0.2),rgba(0,245,255,0.05));color:var(--accent-cyan);">A</div>
+          <div class="pillar-header">
+            <span class="badge badge-cyan">Pillar A</span>
+            <h3>AI Vision &amp; Dynamic Density Processing</h3>
+          </div>
+          <p>Virtual zones mapped over live camera feeds. YOLOv8 counts every vehicle in real time and dynamically allocates green time proportional to density — never wasting a second on empty lanes.</p>
+          <div class="pillar-features">
+            <div class="pf-row"><span class="pf-dot" style="background:var(--accent-cyan);"></span>Base minimum 15s for pedestrian safety</div>
+            <div class="pf-row"><span class="pf-dot" style="background:var(--accent-cyan);"></span>Proportional time added per vehicle density</div>
+            <div class="pf-row"><span class="pf-dot" style="background:var(--accent-cyan);"></span>Real-time Google Maps density overlay for commuters</div>
+          </div>
+          <div class="pillar-tech">
+            <span class="badge badge-cyan">YOLOv8</span>
+            <span class="badge badge-cyan">OpenCV</span>
+            <span class="badge badge-cyan">WebSocket</span>
+          </div>
+        </div>
+
+        <!-- Pillar B -->
+        <div class="pillar-card card card-glow-green">
+          <div class="pillar-letter" style="background: linear-gradient(135deg,rgba(0,255,157,0.2),rgba(0,255,157,0.05));color:var(--accent-green);">B</div>
+          <div class="pillar-header">
+            <span class="badge badge-green">Pillar B</span>
+            <h3>Direct Visual Failsafe (Camera Override)</h3>
+          </div>
+          <p>Edge-AI processes video locally — no GPS required. Detects ambulance shape, color patterns, and strobe frequencies. Triggers a safe 3-second yellow clearance before flipping the corridor green.</p>
+          <div class="pillar-features">
+            <div class="pf-row"><span class="pf-dot" style="background:var(--accent-green);"></span>Works without cloud or GPS connectivity</div>
+            <div class="pf-row"><span class="pf-dot" style="background:var(--accent-green);"></span>Safety Buffer: 3s yellow → red → green sequence</div>
+            <div class="pf-row"><span class="pf-dot" style="background:var(--accent-green);"></span>Detects flashing strobe frequency signatures</div>
+          </div>
+          <div class="pillar-tech">
+            <span class="badge badge-green">Edge AI</span>
+            <span class="badge badge-green">PyTorch</span>
+            <span class="badge badge-green">97%+ Conf.</span>
+          </div>
+        </div>
+
+        <!-- Pillar C -->
+        <div class="pillar-card card" style="border-color:rgba(124,58,237,0.25);">
+          <div class="pillar-letter" style="background: linear-gradient(135deg,rgba(124,58,237,0.2),rgba(124,58,237,0.05));color:#a78bfa;">C</div>
+          <div class="pillar-header">
+            <span class="badge badge-violet">Pillar C</span>
+            <h3>Verified Green Corridor Portal &amp; Preemption</h3>
+          </div>
+          <p>RBAC-secured web portal for hospital dispatchers and security chiefs. Uses predictive preemption to begin altering a signal cycle 30 seconds before the vehicle arrives — creating a zero-stop green wave.</p>
+          <div class="pillar-features">
+            <div class="pf-row"><span class="pf-dot" style="background:#a78bfa;"></span>Role-Based Access Control (hospital, police, VVIP)</div>
+            <div class="pf-row"><span class="pf-dot" style="background:#a78bfa;"></span>Predictive preemption — starts 30s in advance</div>
+            <div class="pf-row"><span class="pf-dot" style="background:#a78bfa;"></span>Full audit log: timestamp, user ID, GPS track</div>
+          </div>
+          <div class="pillar-tech">
+            <span class="badge badge-violet">RBAC + MFA</span>
+            <span class="badge badge-violet">FastAPI</span>
+            <span class="badge badge-violet">React.js</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="g-divider"></div>
+
+  <!-- ─────────────────────────────────────── -->
+  <!--  USER FLOWS                            -->
+  <!-- ─────────────────────────────────────── -->
+  <section class="section" id="flows">
+    <div class="container">
+      <div class="section-label">User Journeys</div>
+      <h2 class="section-title">Four Mission-Critical<br /><span class="highlight">Use Cases</span></h2>
+
+      <div class="flows-tabs">
+        <div class="tabs" style="margin-bottom:40px;max-width:700px;">
+          <button class="tab active" onclick="showFlow(0,this)" id="flow-tab-0">🚶 Commuter</button>
+          <button class="tab" onclick="showFlow(1,this)" id="flow-tab-1">🚑 Ambulance</button>
+          <button class="tab" onclick="showFlow(2,this)" id="flow-tab-2">📷 Visual Override</button>
+          <button class="tab" onclick="showFlow(3,this)" id="flow-tab-3">🛡️ VVIP Convoy</button>
+        </div>
+
+        <div class="flow-panels">
+          <!-- Flow 0: Commuter -->
+          <div class="flow-panel active" id="flow-0">
+            <div class="flow-content">
+              <div class="flow-meta">
+                <span class="badge badge-cyan">Flow 1</span>
+                <h3 class="flow-title">Everyday Commuter — Smart Routing</h3>
+                <p class="flow-desc">The public-facing layer. Every citizen benefits from AI-optimized routing without needing any special access.</p>
+              </div>
+              <div class="flow-steps">
+                <div class="flow-step"><span class="step-num">01</span><div><strong>Open the public app</strong><br/><span>Enter your destination as usual</span></div></div>
+                <div class="flow-step"><span class="step-num">02</span><div><strong>AI Overlay Applied</strong><br/><span>Base route from Google Maps API, augmented with live intersection wait times from AURA-GRID cameras</span></div></div>
+                <div class="flow-step"><span class="step-num">03</span><div><strong>Dynamic Re-routing</strong><br/><span>If your route hits density &gt;70%, the app reroutes you in real time, naturally balancing city-wide load</span></div></div>
+                <div class="flow-step"><span class="step-num">04</span><div><strong>Arrive Faster</strong><br/><span>Average 40% reduction in intersection wait time citywide</span></div></div>
+              </div>
+            </div>
+            <div class="flow-visual flow-visual-commuter">
+              <div class="fv-card card">
+                <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:12px;">LIVE ROUTE OPTIMIZER</div>
+                <div class="route-bar"><span class="route-dot" style="background:var(--accent-green);"></span><span>MG Road → City Hospital</span><span style="color:var(--accent-green);font-weight:700;margin-left:auto;">12 min ✓</span></div>
+                <div class="route-bar avoided"><span class="route-dot" style="background:var(--accent-red);"></span><span style="text-decoration:line-through;color:var(--text-muted);">MG Road → Highway 4</span><span style="color:var(--accent-red);margin-left:auto;">Congested</span></div>
+                <div style="margin-top:16px;">
+                  <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:6px;">NEXT INTERSECTION WAIT</div>
+                  <div class="progress-bar"><div class="progress-fill green" style="width:20%;"></div></div>
+                  <div style="font-size:0.8rem;color:var(--accent-green);margin-top:4px;">~8 seconds</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Flow 1: Ambulance -->
+          <div class="flow-panel" id="flow-1">
+            <div class="flow-content">
+              <div class="flow-meta">
+                <span class="badge badge-red">Flow 2</span>
+                <h3 class="flow-title">Verified Ambulance Dispatcher</h3>
+                <p class="flow-desc">Planned Green Corridor — zero stops from accident site to hospital.</p>
+              </div>
+              <div class="flow-steps">
+                <div class="flow-step"><span class="step-num step-red">01</span><div><strong>Dispatcher logs in</strong><br/><span>Authenticates via secure Green Corridor Portal with hospital credentials</span></div></div>
+                <div class="flow-step"><span class="step-num step-red">02</span><div><strong>Enter Route</strong><br/><span>Accident location → Destination hospital. Our custom A* graph algorithm calculates the fastest, clearest path</span></div></div>
+                <div class="flow-step"><span class="step-num step-red">03</span><div><strong>Initiate Green Wave</strong><br/><span>System begins preempting signal cycles on every intersection on the route 30 seconds before arrival</span></div></div>
+                <div class="flow-step"><span class="step-num step-red">04</span><div><strong>Zero Stops</strong><br/><span>Ambulance passes through a dynamically maintained green corridor end-to-end</span></div></div>
+              </div>
+            </div>
+            <div class="flow-visual">
+              <div class="fv-card card">
+                <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:12px;">GREEN CORRIDOR STATUS</div>
+                <div class="corridor-nodes">
+                  <div class="cnode active"><span class="status-dot green"></span> Intersection 1 <span class="badge badge-green" style="float:right;font-size:0.65rem;">GREEN ✓</span></div>
+                  <div class="cnode active"><span class="status-dot green"></span> Intersection 2 <span class="badge badge-green" style="float:right;font-size:0.65rem;">GREEN ✓</span></div>
+                  <div class="cnode preparing"><span class="status-dot amber"></span> Intersection 3 <span class="badge badge-amber" style="float:right;font-size:0.65rem;">PREP ⏱</span></div>
+                  <div class="cnode pending"><span class="status-dot cyan"></span> Intersection 4 <span class="badge badge-cyan" style="float:right;font-size:0.65rem;">QUEUED</span></div>
+                  <div class="cnode pending"><span class="status-dot cyan"></span> City Hospital <span class="badge badge-cyan" style="float:right;font-size:0.65rem;">QUEUED</span></div>
+                </div>
+                <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:flex;gap:16px;">
+                  <div><div style="font-size:0.7rem;color:var(--text-muted);">ETA</div><div style="font-weight:700;color:var(--accent-green);">4m 12s</div></div>
+                  <div><div style="font-size:0.7rem;color:var(--text-muted);">Stops</div><div style="font-weight:700;color:var(--accent-green);">0</div></div>
+                  <div><div style="font-size:0.7rem;color:var(--text-muted);">Nodes Active</div><div style="font-weight:700;color:var(--accent-cyan);">5 / 5</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Flow 2: Visual Override -->
+          <div class="flow-panel" id="flow-2">
+            <div class="flow-content">
+              <div class="flow-meta">
+                <span class="badge badge-amber">Flow 3</span>
+                <h3 class="flow-title">Unexpected Emergency — Visual Failsafe</h3>
+                <p class="flow-desc">No GPS, no portal — the Edge-AI camera detects the vehicle and acts autonomously.</p>
+              </div>
+              <div class="flow-steps">
+                <div class="flow-step"><span class="step-num step-amber">01</span><div><strong>Ambulance approaches</strong><br/><span>Not using the portal — GPS unavailable. Standard approach to intersection</span></div></div>
+                <div class="flow-step"><span class="step-num step-amber">02</span><div><strong>YOLO Detection</strong><br/><span>Camera detects Class: Ambulance — shape, color, and 97%+ confidence strobe pattern match</span></div></div>
+                <div class="flow-step"><span class="step-num step-amber">03</span><div><strong>Safety Buffer Protocol</strong><br/><span>3-second yellow clearance → cross-traffic turns red → emergency lane turns green</span></div></div>
+                <div class="flow-step"><span class="step-num step-amber">04</span><div><strong>Auto-resume</strong><br/><span>Once vehicle clears the frame, intersection instantly returns to AI dynamic cycle</span></div></div>
+              </div>
+            </div>
+            <div class="flow-visual">
+              <div class="fv-card card">
+                <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:8px;">EDGE-AI CAMERA FEED</div>
+                <div class="camera-frame">
+                  <div class="cam-label mono">CAM-07 · LIVE · 30fps</div>
+                  <div class="cam-detect-box">
+                    <div class="cam-det-label">Ambulance · 97.2%</div>
+                  </div>
+                  <div class="cam-scan"></div>
+                  <div style="display:flex;justify-content:space-between;margin-top:8px;">
+                    <span class="badge badge-red">🚨 OVERRIDE ACTIVE</span>
+                    <span class="badge badge-amber">YELLOW → RED → GREEN</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Flow 3: VVIP -->
+          <div class="flow-panel" id="flow-3">
+            <div class="flow-content">
+              <div class="flow-meta">
+                <span class="badge badge-violet">Flow 4</span>
+                <h3 class="flow-title">VVIP &amp; Security Convoy Protocol</h3>
+                <p class="flow-desc">Highest clearance tier — full route lock with extended buffers before and after the convoy.</p>
+              </div>
+              <div class="flow-steps">
+                <div class="flow-step"><span class="step-num step-violet">01</span><div><strong>Security Chief logs in</strong><br/><span>MFA-secured access with VVIP-tier credentials</span></div></div>
+                <div class="flow-step"><span class="step-num step-violet">02</span><div><strong>Route Mapping</strong><br/><span>System prioritizes wider roads and fewer complex intersections for convoy safety</span></div></div>
+                <div class="flow-step"><span class="step-num step-violet">03</span><div><strong>Convoy Lock activated</strong><br/><span>Extended green buffer — cross-traffic held red before AND after convoy passes, preventing civilian cut-ins</span></div></div>
+                <div class="flow-step"><span class="step-num step-violet">04</span><div><strong>Node Release</strong><br/><span>Once the final security vehicle clears a node, normal AI traffic cycle resumes instantly to minimize disruption</span></div></div>
+              </div>
+            </div>
+            <div class="flow-visual">
+              <div class="fv-card card">
+                <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:8px;">CONVOY LOCK STATUS</div>
+                <div class="convoy-row">
+                  <div class="convoy-vehicle">🚔</div>
+                  <div class="convoy-vehicle vvip">⭐</div>
+                  <div class="convoy-vehicle">🚔</div>
+                </div>
+                <div style="text-align:center;margin:8px 0;font-size:0.75rem;color:var(--accent-violet);">← Extended Buffer Zone →</div>
+                <div style="display:flex;gap:8px;margin-top:8px;">
+                  <div style="flex:1;background:rgba(255,59,92,0.15);border:1px solid rgba(255,59,92,0.3);border-radius:8px;padding:8px;text-align:center;">
+                    <div style="font-size:0.7rem;color:var(--text-muted);">Cross Traffic</div>
+                    <div style="color:var(--accent-red);font-weight:700;">HELD RED</div>
+                  </div>
+                  <div style="flex:1;background:rgba(0,255,157,0.1);border:1px solid rgba(0,255,157,0.3);border-radius:8px;padding:8px;text-align:center;">
+                    <div style="font-size:0.7rem;color:var(--text-muted);">Convoy Lane</div>
+                    <div style="color:var(--accent-green);font-weight:700;">ALL GREEN</div>
+                  </div>
+                </div>
+                <div style="margin-top:10px;font-size:0.72rem;color:var(--text-muted);">Clearance Level: <span style="color:#a78bfa;font-weight:700;">VVIP ALPHA</span> · MFA ✓ · Logged</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="g-divider"></div>
+
+  <!-- ─────────────────────────────────────── -->
+  <!--  TECHNICAL ARCHITECTURE               -->
+  <!-- ─────────────────────────────────────── -->
+  <section class="section" id="tech">
+    <div class="glow-blob glow-blob-violet" style="width:500px;height:500px;bottom:0;left:0;opacity:0.3;"></div>
+    <div class="container">
+      <div class="section-label">Technical Depth</div>
+      <h2 class="section-title">Mathematical & <br /><span class="highlight">System Architecture</span></h2>
+
+      <div class="tech-layout">
+        <!-- Algorithm Card -->
+        <div class="card tech-card" style="padding:36px;">
+          <h3 style="margin-bottom:8px;font-size:1.2rem;">Dynamic Routing Algorithm</h3>
+          <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:24px;">Custom A* / Dijkstra's graph traversal with live AI-weighted edges:</p>
+          <div class="formula-box">
+            <div class="formula">
+              <span class="formula-var" style="color:var(--accent-cyan);">w(u,v)</span>
+              <span class="formula-eq"> = </span>
+              <span class="formula-greek">α</span><span class="formula-var">·d(u,v)</span>
+              <span class="formula-op"> + </span>
+              <span class="formula-greek">β</span><span class="formula-var">·ρ(u,v)</span>
+              <span class="formula-op"> + </span>
+              <span class="formula-greek">γ</span><span class="formula-var">·s(u,v)</span>
+            </div>
+          </div>
+          <div class="formula-legend">
+            <div class="fl-row"><span class="fl-var" style="color:var(--accent-green);">d(u,v)</span><span>Physical distance between intersections u and v</span></div>
+            <div class="fl-row"><span class="fl-var" style="color:var(--accent-amber);">ρ(u,v)</span><span>Live vehicle density from YOLO camera</span></div>
+            <div class="fl-row"><span class="fl-var" style="color:var(--accent-red);">s(u,v)</span><span>Signal phase penalty (current red/green state)</span></div>
+            <div class="fl-row"><span class="fl-var" style="color:#a78bfa;">α,β,γ</span><span>Tunable weights — β &amp; γ heavily prioritized for emergencies</span></div>
+          </div>
+        </div>
+
+        <!-- Tech Stack Card -->
+        <div class="card tech-card" style="padding:36px;">
+          <h3 style="margin-bottom:20px;font-size:1.2rem;">Full Stack Breakdown</h3>
+          <div class="stack-grid">
+            <div class="stack-item">
+              <div class="stack-layer" style="color:var(--accent-cyan);">Frontend / UI</div>
+              <div class="stack-tags">
+                <span class="badge badge-cyan">React.js</span>
+                <span class="badge badge-cyan">Streamlit</span>
+                <span class="badge badge-cyan">Google Maps JS API</span>
+              </div>
+            </div>
+            <div class="stack-item">
+              <div class="stack-layer" style="color:var(--accent-green);">Backend</div>
+              <div class="stack-tags">
+                <span class="badge badge-green">FastAPI</span>
+                <span class="badge badge-green">Node.js</span>
+                <span class="badge badge-green">WebSockets</span>
+              </div>
+            </div>
+            <div class="stack-item">
+              <div class="stack-layer" style="color:var(--accent-amber);">Machine Learning</div>
+              <div class="stack-tags">
+                <span class="badge badge-amber">YOLOv8</span>
+                <span class="badge badge-amber">PyTorch</span>
+                <span class="badge badge-amber">OpenCV</span>
+              </div>
+            </div>
+            <div class="stack-item">
+              <div class="stack-layer" style="color:#a78bfa;">APIs &amp; Security</div>
+              <div class="stack-tags">
+                <span class="badge badge-violet">Google Maps Directions</span>
+                <span class="badge badge-violet">RBAC + MFA</span>
+                <span class="badge badge-violet">JWT Auth</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- System Flow Diagram -->
+      <div class="system-diagram card" style="margin-top:32px;padding:36px;">
+        <h3 style="margin-bottom:24px;text-align:center;font-size:1.1rem;color:var(--text-secondary);">End-to-End System Data Flow</h3>
+        <div class="flow-diagram">
+          <div class="fd-node fd-camera"><div class="fd-icon">📷</div><div class="fd-label">CCTV / Edge Camera</div></div>
+          <div class="fd-arrow">→</div>
+          <div class="fd-node fd-yolo"><div class="fd-icon">🤖</div><div class="fd-label">YOLO AI Engine</div></div>
+          <div class="fd-arrow">→</div>
+          <div class="fd-node fd-api"><div class="fd-icon">⚡</div><div class="fd-label">FastAPI Backend</div></div>
+          <div class="fd-arrow fd-split">⇓</div>
+          <div class="fd-split-row">
+            <div class="fd-node fd-maps"><div class="fd-icon">🗺️</div><div class="fd-label">Public Map</div></div>
+            <div class="fd-node fd-signal"><div class="fd-icon">🚦</div><div class="fd-label">Signal Controller</div></div>
+            <div class="fd-node fd-portal"><div class="fd-icon">🔒</div><div class="fd-label">Green Portal</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="g-divider"></div>
+
+  <!-- ─────────────────────────────────────── -->
+  <!--  EDGE CASES / Q&A                      -->
+  <!-- ─────────────────────────────────────── -->
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="section-label">Judge Q&amp;A</div>
+      <h2 class="section-title">Edge Cases &amp; <br/><span class="highlight">Fail-Safes</span></h2>
+      <p class="section-desc">AURA-GRID anticipates real-world failure modes. Every "What if?" has an engineered answer.</p>
+
+      <div class="faq-grid">
+        <div class="faq-card card" onclick="toggleFaq(this)">
+          <div class="faq-q"><span class="faq-icon">🚑</span>What if two ambulances approach from opposite directions?<span class="faq-arrow">↓</span></div>
+          <div class="faq-a">The system assigns priority via a FIFO queue. If hospital integration is active, the vehicle carrying the more critical patient (e.g., Cardiac Arrest &gt; Broken Arm) receives priority. The secondary ambulance gets a 3-second delayed corridor activation.</div>
+        </div>
+        <div class="faq-card card" onclick="toggleFaq(this)">
+          <div class="faq-q"><span class="faq-icon">🌧️</span>What if the camera goes down or is covered in rain?<span class="faq-arrow">↓</span></div>
+          <div class="faq-a">The system automatically detects a null or degraded camera feed and reverts to the pre-programmed fixed-timer fallback mode. An alert is sent to the control center. Normal AI operation resumes automatically when the feed is restored.</div>
+        </div>
+        <div class="faq-card card" onclick="toggleFaq(this)">
+          <div class="faq-q"><span class="faq-icon">🔒</span>How do we prevent abuse of the VVIP system?<span class="faq-arrow">↓</span></div>
+          <div class="faq-a">Every "Green Corridor" request is immutably logged with a timestamp, user ID, GPS track, and session token. MFA is required for VVIP-tier access. All logs are auditable and tamper-evident. Unauthorized activation triggers an immediate alert to senior administrators.</div>
+        </div>
+        <div class="faq-card card" onclick="toggleFaq(this)">
+          <div class="faq-q"><span class="faq-icon">📡</span>What if the internet connection is lost mid-corridor?<span class="faq-arrow">↓</span></div>
+          <div class="faq-a">Each intersection node caches the corridor plan locally at activation. If cloud connectivity drops, the node executes its pre-cached green schedule autonomously until the last downloaded instruction expires, then defaults to safe fixed-timer mode.</div>
+        </div>
+        <div class="faq-card card" onclick="toggleFaq(this)">
+          <div class="faq-q"><span class="faq-icon">🚶</span>Does this worsen pedestrian safety at crossings?<span class="faq-arrow">↓</span></div>
+          <div class="faq-a">No. The dynamic time algorithm enforces a non-negotiable minimum 15-second pedestrian phase regardless of vehicle density. Emergency overrides always trigger the 3-second yellow safety buffer, giving pedestrians at the crossing time to clear before the green switches to the emergency lane.</div>
+        </div>
+        <div class="faq-card card" onclick="toggleFaq(this)">
+          <div class="faq-q"><span class="faq-icon">⚖️</span>Is this scalable to an entire city?<span class="faq-arrow">↓</span></div>
+          <div class="faq-a">Yes. The architecture uses edge AI at each node, so processing is distributed — no single server bottleneck. The central server only handles coordination signals (WebSocket messages), not video processing. Adding a new intersection node is a hardware + config operation, not a software re-architecture.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="g-divider"></div>
+
+  <!-- ─────────────────────────────────────── -->
+  <!--  CTA FOOTER                            -->
+  <!-- ─────────────────────────────────────── -->
+  <section class="section-sm" id="cta">
+    <div class="glow-blob glow-blob-cyan" style="width:400px;height:300px;bottom:0;left:50%;transform:translateX(-50%);opacity:0.3;"></div>
+    <div class="container" style="text-align:center;">
+      <div class="section-label" style="justify-content:center;">Ready to Deploy</div>
+      <h2 class="section-title" style="text-align:center;">Experience <span class="highlight">AURA-GRID</span> Live</h2>
+      <p style="color:var(--text-secondary);max-width:500px;margin:16px auto 36px;font-size:1rem;">
+        Explore the real-time dashboard or initiate a simulated green corridor from our secure dispatcher portal.
+      </p>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+        <a href="dashboard.html" class="btn btn-primary btn-lg">🖥 Launch Dashboard</a>
+        <a href="portal.html" class="btn btn-secondary btn-lg">🔒 Green Corridor Portal</a>
+      </div>
+    </div>
+  </section>
+
+  <footer style="padding:24px 40px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2;">
+    <div class="nav-logo">
+      <div class="logo-icon">⬡</div>
+      <span><span class="accent">AURA</span>-GRID / FLOW-AI</span>
+    </div>
+    <div style="font-size:0.8rem;color:var(--text-muted);">
+      Prototype v1.0 · Built for Smart City Innovation Challenge · 2026
+    </div>
+    <div style="display:flex;gap:8px;">
+      <span class="status-dot green"></span>
+      <span style="font-size:0.8rem;color:var(--text-secondary);">All Systems Operational</span>
+    </div>
+  </footer>
+
+  <script src="home.js"></script>
+</body>
+</html>

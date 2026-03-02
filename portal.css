@@ -1,0 +1,401 @@
+/* ============================================================
+   portal.css — Green Corridor Portal Styles
+   ============================================================ */
+
+/* ── Login Screen ── */
+.portal-login {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 460px;
+    padding: 40px;
+    border-radius: var(--radius-xl);
+    background: rgba(13, 17, 23, 0.9);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(124, 58, 237, 0.25);
+    box-shadow: 0 20px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(124, 58, 237, 0.1);
+    animation: fadeInUp 0.5s ease;
+}
+
+.login-header {
+    margin-bottom: 28px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.mfa-box {
+    background: rgba(124, 58, 237, 0.08);
+    border: 1px solid rgba(124, 58, 237, 0.2);
+    border-radius: var(--radius-md);
+    padding: 14px;
+}
+
+.otp-inputs {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.otp-digit {
+    width: 44px;
+    height: 50px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 1.2rem;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    outline: none;
+    transition: var(--transition);
+}
+
+.otp-digit:focus {
+    border-color: #a78bfa;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+}
+
+.login-footer {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+}
+
+/* ── Portal Main (post-login) ── */
+.portal-main {
+    min-height: 100vh;
+    position: relative;
+    z-index: 2;
+}
+
+.portal-content {
+    padding-top: 32px;
+    padding-bottom: 48px;
+}
+
+.portal-layout {
+    display: grid;
+    grid-template-columns: 460px 1fr;
+    gap: 24px;
+}
+
+.portal-left {
+    display: flex;
+    flex-direction: column;
+}
+
+.portal-right {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── Panel ── */
+.portal-panel {
+    padding: 24px;
+    border-radius: var(--radius-lg);
+}
+
+.pp-header {
+    margin-bottom: 20px;
+}
+
+.pp-header h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+/* ── Corridor Type Selector ── */
+.corridor-type-selector {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.cts-opt {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 8px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    font-size: 0.8rem;
+    transition: var(--transition);
+    text-align: center;
+}
+
+.cts-opt span:first-child {
+    font-size: 20px;
+}
+
+.cts-opt:hover {
+    border-color: rgba(0, 245, 255, 0.3);
+}
+
+.cts-opt.active {
+    background: rgba(0, 245, 255, 0.08);
+    border-color: rgba(0, 245, 255, 0.35);
+    color: var(--accent-cyan);
+}
+
+/* ── Route Form ── */
+.route-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.route-swap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rs-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+
+/* ── Route Results ── */
+.route-results {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.rr-comparison {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.rr-option {
+    flex: 1;
+    padding: 14px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.rr-ai {
+    border-color: rgba(0, 255, 157, 0.3);
+    background: rgba(0, 255, 157, 0.05);
+}
+
+.rr-opt-label {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.rr-opt-val {
+    font-size: 1.4rem;
+    font-weight: 800;
+    font-family: var(--font-mono);
+}
+
+.rr-opt-sub {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+.rr-opt-stops {
+    font-size: 0.78rem;
+    margin-top: 6px;
+    color: var(--text-muted);
+}
+
+.vs-divider {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    padding: 6px 10px;
+}
+
+.rr-nodes {}
+
+.rr-node-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.rr-node {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+}
+
+.rr-formula {
+    background: rgba(0, 245, 255, 0.04);
+    border: 1px solid rgba(0, 245, 255, 0.1);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+}
+
+.formula-mini {
+    font-size: 0.85rem;
+}
+
+/* ── Audit Log ── */
+.audit-log {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.audit-entry {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    font-size: 0.78rem;
+}
+
+/* ── Map Panel ── */
+.portal-map-panel {}
+
+.portal-map {
+    background: #050c18;
+    border: 1px solid rgba(0, 245, 255, 0.15);
+    border-radius: var(--radius-md);
+    position: relative;
+    overflow: hidden;
+}
+
+.map-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.map-node {
+    cursor: pointer;
+    transition: r 0.3s ease;
+}
+
+.map-node:hover {
+    r: 12;
+}
+
+.map-node-corridor {
+    animation: pulse-dot 2s infinite;
+}
+
+.map-amb {
+    font-size: 16px;
+}
+
+.map-legend {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    gap: 10px;
+    background: rgba(3, 7, 18, 0.8);
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 0.7rem;
+}
+
+/* ── Live Timeline ── */
+.live-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.lt-node {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    position: relative;
+    padding: 8px 0;
+}
+
+.lt-node:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 24px;
+    width: 2px;
+    height: calc(100% - 16px);
+    background: var(--border);
+}
+
+.lt-node.lt-done::after {
+    background: rgba(0, 255, 157, 0.3);
+}
+
+.lt-node.lt-active::after {
+    background: rgba(0, 245, 255, 0.3);
+}
+
+.lt-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    margin-top: 2px;
+}
+
+.lt-dot-active {
+    background: var(--accent-cyan);
+    box-shadow: 0 0 12px var(--accent-cyan);
+    animation: pulse-dot 1.5s infinite;
+}
+
+.lt-info {}
+
+.lt-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.lt-status {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+    .portal-layout {
+        grid-template-columns: 1fr;
+    }
+}

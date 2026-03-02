@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AURA-GRID | Green Corridor Portal — Secure Dispatcher Access</title>
+    <meta name="description"
+        content="Verified Green Corridor Portal for ambulance dispatchers, police chiefs, and VVIP security teams. RBAC + MFA secured." />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="portal.css" />
+</head>
+
+<body>
+    <div class="grid-bg"></div>
+
+    <!-- LOGIN SCREEN -->
+    <div class="portal-login" id="portal-login">
+        <div class="glow-blob glow-blob-cyan" style="width:500px;height:500px;top:-200px;left:-100px;opacity:0.5;">
+        </div>
+        <div class="glow-blob glow-blob-violet"
+            style="width:400px;height:400px;bottom:-100px;right:-100px;opacity:0.4;"></div>
+
+        <div class="login-card card">
+            <div class="login-header">
+                <div class="nav-logo" style="justify-content:center;margin-bottom:8px;">
+                    <div class="logo-icon" style="width:48px;height:48px;font-size:24px;">⬡</div>
+                    <span style="font-size:1.5rem;"><span class="accent">AURA</span>-GRID</span>
+                </div>
+                <div style="text-align:center;margin-bottom:4px;">
+                    <span class="badge badge-violet">🔒 Secure Access Portal</span>
+                </div>
+                <h2 style="text-align:center;font-size:1.2rem;margin-top:12px;">Green Corridor Dispatcher</h2>
+                <p style="text-align:center;color:var(--text-secondary);font-size:0.85rem;margin-top:6px;">Authorized
+                    personnel only. All sessions are monitored and logged.</p>
+            </div>
+
+            <form class="login-form" onsubmit="handleLogin(event)">
+                <div class="input-group">
+                    <label class="input-label" for="login-id">Dispatcher ID / Badge Number</label>
+                    <input type="text" id="login-id" class="input-field" placeholder="e.g. DISP-AMB-0042"
+                        value="DISP-AMB-0042" />
+                </div>
+                <div class="input-group">
+                    <label class="input-label" for="login-role">Access Role</label>
+                    <select id="login-role" class="input-field">
+                        <option value="ambulance">🚑 Hospital Dispatcher (Ambulance)</option>
+                        <option value="police">👮 Police Chief (Emergency)</option>
+                        <option value="vvip">⭐ VVIP Security Director</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label class="input-label" for="login-pass">Access Code</label>
+                    <input type="password" id="login-pass" class="input-field" placeholder="••••••••"
+                        value="secret123" />
+                </div>
+
+                <!-- MFA -->
+                <div class="mfa-box">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                        <span style="font-size:16px;">📱</span>
+                        <span style="font-size:0.82rem;font-weight:600;">Multi-Factor Verification</span>
+                        <span class="badge badge-violet" style="margin-left:auto;">OTP Sent</span>
+                    </div>
+                    <div class="otp-inputs">
+                        <input type="text" maxlength="1" class="otp-digit" value="4" />
+                        <input type="text" maxlength="1" class="otp-digit" value="2" />
+                        <input type="text" maxlength="1" class="otp-digit" value="7" />
+                        <input type="text" maxlength="1" class="otp-digit" value="8" />
+                        <input type="text" maxlength="1" class="otp-digit" value="1" />
+                        <input type="text" maxlength="1" class="otp-digit" value="9" />
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary"
+                    style="width:100%;justify-content:center;margin-top:8px;padding:14px;">
+                    🔐 Authenticate &amp; Access Portal
+                </button>
+            </form>
+
+            <div class="login-footer">
+                <div style="font-size:0.72rem;color:var(--text-muted);text-align:center;">
+                    🛡️ Secured with AES-256 · JWT · RBAC + MFA<br />
+                    Session will be logged with timestamp, user ID, and GPS coordinates
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PORTAL MAIN (post-login) -->
+    <div class="portal-main" id="portal-main" style="display:none;">
+        <nav class="navbar" style="position:relative;top:auto;left:auto;right:auto;">
+            <div class="nav-logo">
+                <div class="logo-icon">⬡</div>
+                <span><span class="accent">AURA</span>-GRID</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+                <span class="badge badge-violet" id="portal-role-badge">🚑 Hospital Dispatcher</span>
+                <span class="badge badge-green"><span class="status-dot green" style="margin-right:4px;"></span>Session
+                    Active</span>
+                <span class="mono" style="font-size:0.78rem;color:var(--text-muted);"
+                    id="portal-user">DISP-AMB-0042</span>
+            </div>
+            <div style="display:flex;gap:8px;">
+                <a href="dashboard.html" class="btn btn-secondary btn-sm">🖥 Dashboard</a>
+                <a href="index.html" class="btn btn-secondary btn-sm">← Home</a>
+                <button class="btn btn-sm"
+                    style="background:rgba(255,59,92,0.15);color:var(--accent-red);border:1px solid rgba(255,59,92,0.3);"
+                    onclick="logout()">Logout</button>
+            </div>
+        </nav>
+
+        <div class="portal-content container-wide" style="padding-top:40px;padding-bottom:40px;">
+            <div class="portal-layout">
+
+                <!-- LEFT: Route Planner -->
+                <div class="portal-left">
+                    <div class="portal-panel card">
+                        <div class="pp-header">
+                            <span class="badge badge-red" id="corridor-type-badge">🚑 Emergency Green Corridor</span>
+                            <h3 style="margin-top:10px;">Initiate Route</h3>
+                            <p style="color:var(--text-secondary);font-size:0.85rem;margin-top:4px;">Set origin and
+                                destination. Our AI will calculate the optimal path.</p>
+                        </div>
+
+                        <!-- Corridor type selector -->
+                        <div class="corridor-type-selector">
+                            <div class="cts-opt active" data-type="ambulance" onclick="setCorridorType(this)">
+                                <span>🚑</span><span>Ambulance</span>
+                            </div>
+                            <div class="cts-opt" data-type="fire" onclick="setCorridorType(this)">
+                                <span>🚒</span><span>Fire Truck</span>
+                            </div>
+                            <div class="cts-opt" data-type="vvip" onclick="setCorridorType(this)">
+                                <span>⭐</span><span>VVIP Convoy</span>
+                            </div>
+                        </div>
+
+                        <div class="route-form">
+                            <div class="input-group">
+                                <label class="input-label">Origin (Pickup / Current Location)</label>
+                                <input type="text" class="input-field" id="origin"
+                                    placeholder="e.g. Sector 12, Accident Site" value="Sector 12, Accident Site" />
+                            </div>
+                            <div class="route-swap">
+                                <div class="rs-line"></div>
+                                <button class="btn btn-icon btn-secondary" onclick="swapLocations()"
+                                    title="Swap">⇅</button>
+                                <div class="rs-line"></div>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Destination</label>
+                                <input type="text" class="input-field" id="dest"
+                                    placeholder="e.g. City General Hospital" value="City General Hospital" />
+                            </div>
+
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px;">
+                                <div class="input-group">
+                                    <label class="input-label">Vehicle ID</label>
+                                    <input type="text" class="input-field" id="vehicle-id" placeholder="AMB-042"
+                                        value="AMB-042" />
+                                </div>
+                                <div class="input-group">
+                                    <label class="input-label">Priority Level</label>
+                                    <select class="input-field" id="priority-level">
+                                        <option value="critical">🔴 Critical (Cardiac Arrest)</option>
+                                        <option value="high">🟠 High (Trauma)</option>
+                                        <option value="medium">🟡 Medium</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:8px;"
+                                onclick="calculateRoute()">
+                                🗺️ Calculate Optimal Route
+                            </button>
+                        </div>
+
+                        <!-- Route Results -->
+                        <div class="route-results" id="route-results" style="display:none;">
+                            <div class="rr-header">
+                                <div
+                                    style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">
+                                    AI Route Analysis</div>
+                                <div class="rr-comparison">
+                                    <div class="rr-option rr-standard">
+                                        <div class="rr-opt-label">Standard GPS Route</div>
+                                        <div class="rr-opt-val" style="color:var(--accent-amber);">11 min 20s</div>
+                                        <div class="rr-opt-sub">Via Highway 4 (congested)</div>
+                                        <div class="rr-opt-stops">🛑 4 red light stops</div>
+                                    </div>
+                                    <div class="vs-divider">VS</div>
+                                    <div class="rr-option rr-ai">
+                                        <div class="rr-opt-label">AURA-GRID AI Route ⚡</div>
+                                        <div class="rr-opt-val" style="color:var(--accent-green);">4 min 12s</div>
+                                        <div class="rr-opt-sub">Via MG Road (cleared)</div>
+                                        <div class="rr-opt-stops" style="color:var(--accent-green);">✅ 0 stops</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="rr-nodes">
+                                <div
+                                    style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">
+                                    Route Nodes (6 Intersections)</div>
+                                <div class="rr-node-list" id="rr-node-list">
+                                    <div class="rr-node"><span class="mono"
+                                            style="color:var(--accent-cyan);font-size:0.75rem;">N-05</span><span>Civil
+                                            Lines × MG Rd</span><span class="badge badge-green"
+                                            style="font-size:0.65rem;margin-left:auto;">Ready</span></div>
+                                    <div class="rr-node"><span class="mono"
+                                            style="color:var(--accent-cyan);font-size:0.75rem;">N-06</span><span>Station
+                                            Rd × Nehru Nagar</span><span class="badge badge-green"
+                                            style="font-size:0.65rem;margin-left:auto;">Ready</span></div>
+                                    <div class="rr-node"><span class="mono"
+                                            style="color:var(--accent-cyan);font-size:0.75rem;">N-07</span><span>MG Road
+                                            × Park Street</span><span class="badge badge-amber"
+                                            style="font-size:0.65rem;margin-left:auto;">Queued</span></div>
+                                    <div class="rr-node"><span class="mono"
+                                            style="color:var(--accent-cyan);font-size:0.75rem;">N-08</span><span>Jubilee
+                                            Hills × NH-65</span><span class="badge badge-amber"
+                                            style="font-size:0.65rem;margin-left:auto;">Queued</span></div>
+                                    <div class="rr-node"><span class="mono"
+                                            style="color:var(--accent-cyan);font-size:0.75rem;">N-09</span><span>Sec 12
+                                            × Residential</span><span class="badge badge-cyan"
+                                            style="font-size:0.65rem;margin-left:auto;">Standby</span></div>
+                                    <div class="rr-node"><span class="mono"
+                                            style="color:var(--accent-cyan);font-size:0.75rem;">H-01</span><span>City
+                                            General Hospital</span><span class="badge badge-cyan"
+                                            style="font-size:0.65rem;margin-left:auto;">Standby</span></div>
+                                </div>
+                            </div>
+
+                            <div class="rr-formula">
+                                <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:6px;">WEIGHT
+                                    FUNCTION PARAMS (w-vector)</div>
+                                <div class="formula-mini mono">w(u,v) = <span style="color:#a78bfa;">0.2</span>·d +
+                                    <span style="color:var(--accent-amber);">0.5</span>·ρ + <span
+                                        style="color:var(--accent-red);">0.3</span>·s</div>
+                                <div style="font-size:0.72rem;color:var(--text-muted);margin-top:4px;">β,γ elevated for
+                                    emergency priority</div>
+                            </div>
+
+                            <button class="btn btn-green btn-lg"
+                                style="width:100%;justify-content:center;margin-top:16px;" onclick="initiateWave()"
+                                id="initiate-btn">
+                                🚦 Initiate Green Wave Now
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Audit Log -->
+                    <div class="portal-panel card" style="margin-top:20px;">
+                        <div class="pp-header" style="margin-bottom:12px;">
+                            <h3 style="font-size:1rem;">📋 Session Audit Log</h3>
+                            <p style="color:var(--text-secondary);font-size:0.8rem;">All actions are recorded and
+                                tamper-evident.</p>
+                        </div>
+                        <div class="audit-log" id="audit-log">
+                            <div class="audit-entry">
+                                <span class="mono" style="color:var(--text-muted);font-size:0.68rem;">[14:32:01]</span>
+                                <span class="badge badge-cyan" style="font-size:0.65rem;">AUTH</span>
+                                <span style="font-size:0.78rem;">User DISP-AMB-0042 authenticated via MFA</span>
+                            </div>
+                            <div class="audit-entry">
+                                <span class="mono" style="color:var(--text-muted);font-size:0.68rem;">[14:32:05]</span>
+                                <span class="badge badge-violet" style="font-size:0.65rem;">SESSION</span>
+                                <span style="font-size:0.78rem;">Portal accessed · GPS: 17.3850°N 78.4867°E</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT: Map + Corridor Status -->
+                <div class="portal-right">
+                    <!-- Simulated map -->
+                    <div class="portal-panel card portal-map-panel">
+                        <div class="pp-header"
+                            style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+                            <div>
+                                <h3 style="font-size:1rem;">City Traffic Map</h3>
+                                <p style="color:var(--text-secondary);font-size:0.78rem;">Live AI density overlay</p>
+                            </div>
+                            <div class="badge badge-cyan"><span class="status-dot cyan"
+                                    style="margin-right:4px;"></span>Live</div>
+                        </div>
+                        <div class="portal-map" id="portal-map">
+                            <!-- Simulated city map with SVG roads -->
+                            <svg class="map-svg" viewBox="0 0 560 380" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Roads -->
+                                <line x1="0" y1="190" x2="560" y2="190" stroke="rgba(255,255,255,0.08)"
+                                    stroke-width="18" />
+                                <line x1="280" y1="0" x2="280" y2="380" stroke="rgba(255,255,255,0.08)"
+                                    stroke-width="18" />
+                                <line x1="0" y1="80" x2="560" y2="80" stroke="rgba(255,255,255,0.04)"
+                                    stroke-width="10" />
+                                <line x1="0" y1="300" x2="560" y2="300" stroke="rgba(255,255,255,0.04)"
+                                    stroke-width="10" />
+                                <line x1="140" y1="0" x2="140" y2="380" stroke="rgba(255,255,255,0.04)"
+                                    stroke-width="10" />
+                                <line x1="420" y1="0" x2="420" y2="380" stroke="rgba(255,255,255,0.04)"
+                                    stroke-width="10" />
+                                <!-- Green Corridor route highlight -->
+                                <path id="corridor-path"
+                                    d="M 100 300 L 140 300 L 140 190 L 280 190 L 280 120 L 420 120 L 420 80"
+                                    stroke="var(--accent-cyan)" stroke-width="4" stroke-dasharray="10,5" fill="none"
+                                    stroke-linecap="round" opacity="0" />
+                                <!-- Intersection dots -->
+                                <circle cx="140" cy="80" r="7" fill="rgba(255,184,0,0.8)" id="map-n1"
+                                    class="map-node" />
+                                <circle cx="280" cy="80" r="7" fill="rgba(255,59,92,0.8)" id="map-n2"
+                                    class="map-node" />
+                                <circle cx="420" cy="80" r="10" fill="rgba(0,255,157,0.9)" id="map-n3"
+                                    class="map-node map-node-corridor" />
+                                <circle cx="140" cy="190" r="7" fill="rgba(0,245,255,0.8)" id="map-n4"
+                                    class="map-node" />
+                                <circle cx="280" cy="190" r="10" fill="rgba(0,255,157,0.9)" id="map-n5"
+                                    class="map-node map-node-corridor" />
+                                <circle cx="420" cy="190" r="7" fill="rgba(255,59,92,0.8)" id="map-n6"
+                                    class="map-node" />
+                                <circle cx="140" cy="300" r="10" fill="rgba(0,255,157,0.9)" id="map-n7"
+                                    class="map-node map-node-corridor" />
+                                <circle cx="280" cy="300" r="7" fill="rgba(255,184,0,0.8)" id="map-n8"
+                                    class="map-node" />
+                                <circle cx="420" cy="300" r="7" fill="rgba(255,59,92,0.8)" id="map-n9"
+                                    class="map-node" />
+                                <!-- Ambulance icon on map -->
+                                <text id="map-amb" x="100" y="308" font-size="16" text-anchor="middle"
+                                    class="map-amb">🚑</text>
+                                <!-- Hospital -->
+                                <text x="420" y="72" font-size="12" text-anchor="middle"
+                                    fill="rgba(0,255,157,0.9)">🏥</text>
+                                <!-- Labels -->
+                                <text x="8" y="186" font-size="9" fill="rgba(255,255,255,0.3)"
+                                    font-family="JetBrains Mono">MG ROAD →</text>
+                                <text x="275" y="25" font-size="9" fill="rgba(255,255,255,0.3)"
+                                    font-family="JetBrains Mono" transform="rotate(90 280 20)">RING RD →</text>
+                            </svg>
+
+                            <!-- Density legend -->
+                            <div class="map-legend">
+                                <span class="gl-item"><span
+                                        style="background:var(--accent-green);width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px;"></span>Corridor</span>
+                                <span class="gl-item"><span
+                                        style="background:var(--accent-amber);width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px;"></span>Med</span>
+                                <span class="gl-item"><span
+                                        style="background:var(--accent-red);width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px;"></span>High</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Corridor status panel -->
+                    <div class="portal-panel card" id="corridor-status-panel" style="margin-top:20px;display:none;">
+                        <div class="pp-header"
+                            style="margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;">
+                            <div>
+                                <span class="badge badge-red">🚨 GREEN WAVE ACTIVE</span>
+                                <h3 style="margin-top:8px;font-size:1rem;">Corridor: AMB-042 → City Hospital</h3>
+                            </div>
+                            <button class="btn btn-sm"
+                                style="background:rgba(255,59,92,0.15);color:var(--accent-red);border:1px solid rgba(255,59,92,0.3);"
+                                onclick="deactivateCorridor()">⛔ Terminate</button>
+                        </div>
+
+                        <div class="live-timeline" id="live-timeline">
+                            <div class="lt-node lt-done">
+                                <div class="lt-dot" style="background:var(--accent-green);"></div>
+                                <div class="lt-info">
+                                    <div class="lt-name">Origin — Sector 12</div>
+                                    <div class="lt-status" style="color:var(--accent-green);">✓ Departed 4m ago</div>
+                                </div>
+                            </div>
+                            <div class="lt-node lt-done">
+                                <div class="lt-dot" style="background:var(--accent-green);"></div>
+                                <div class="lt-info">
+                                    <div class="lt-name">N-05 · Civil Lines</div>
+                                    <div class="lt-status" style="color:var(--accent-green);">✓ Cleared</div>
+                                </div>
+                            </div>
+                            <div class="lt-node lt-done">
+                                <div class="lt-dot" style="background:var(--accent-green);"></div>
+                                <div class="lt-info">
+                                    <div class="lt-name">N-06 · Station Rd</div>
+                                    <div class="lt-status" style="color:var(--accent-green);">✓ Cleared</div>
+                                </div>
+                            </div>
+                            <div class="lt-node lt-active">
+                                <div class="lt-dot lt-dot-active"></div>
+                                <div class="lt-info">
+                                    <div class="lt-name">N-07 · MG Road</div>
+                                    <div class="lt-status" style="color:var(--accent-cyan);">🚑 In Transit</div>
+                                </div>
+                            </div>
+                            <div class="lt-node lt-prep">
+                                <div class="lt-dot" style="background:var(--accent-amber);"></div>
+                                <div class="lt-info">
+                                    <div class="lt-name">N-08 · Jubilee Hills</div>
+                                    <div class="lt-status" style="color:var(--accent-amber);">⏱ Preempting (28s)</div>
+                                </div>
+                            </div>
+                            <div class="lt-node lt-pending">
+                                <div class="lt-dot" style="background:#334155;"></div>
+                                <div class="lt-info">
+                                    <div class="lt-name">N-09 → Hospital</div>
+                                    <div class="lt-status">Queued</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+                            <div>
+                                <div class="nd-stat-label">ETA</div>
+                                <div class="nd-stat-value" style="color:var(--accent-green);" id="portal-eta">3m 42s
+                                </div>
+                            </div>
+                            <div>
+                                <div class="nd-stat-label">Stops</div>
+                                <div class="nd-stat-value" style="color:var(--accent-green);">0</div>
+                            </div>
+                            <div>
+                                <div class="nd-stat-label">Time Saved</div>
+                                <div class="nd-stat-value" style="color:var(--accent-cyan);">7m 08s</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="portal.js"></script>
+</body>
+
+</html>

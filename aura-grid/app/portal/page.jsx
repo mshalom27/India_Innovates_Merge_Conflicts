@@ -1,8 +1,16 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Badge from '@/components/Badge';
 import StatusDot from '@/components/StatusDot';
+
+// Leaflet must be loaded client-side only (no SSR)
+const DelhiMap = dynamic(() => import('@/components/DelhiMap'), {
+    ssr: false, loading: () => (
+        <div style={{ height: '360px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#050c18', borderRadius: '12px', color: '#00f5ff', fontSize: '0.9rem' }}>🗺️ Loading Delhi Map…</div>
+    )
+});
 
 /* ── OTP Input ── */
 function OtpInput() {
@@ -21,41 +29,7 @@ function OtpInput() {
     );
 }
 
-/* ── City SVG Map ── */
-function CityMap({ showCorridor, ambPos }) {
-    return (
-        <div className="relative bg-[#050c18] border border-accent-cyan/15 rounded-xl overflow-hidden">
-            <svg viewBox="0 0 560 360" className="w-full" xmlns="http://www.w3.org/2000/svg">
-                {/* Main roads */}
-                <line x1="0" y1="180" x2="560" y2="180" stroke="rgba(255,255,255,0.08)" strokeWidth="18" />
-                <line x1="280" y1="0" x2="280" y2="360" stroke="rgba(255,255,255,0.08)" strokeWidth="18" />
-                <line x1="0" y1="80" x2="560" y2="80" stroke="rgba(255,255,255,0.04)" strokeWidth="10" />
-                <line x1="0" y1="290" x2="560" y2="290" stroke="rgba(255,255,255,0.04)" strokeWidth="10" />
-                <line x1="140" y1="0" x2="140" y2="360" stroke="rgba(255,255,255,0.04)" strokeWidth="10" />
-                <line x1="420" y1="0" x2="420" y2="360" stroke="rgba(255,255,255,0.04)" strokeWidth="10" />
-                {/* Green corridor path */}
-                {showCorridor && <path d="M 100 290 L 140 290 L 140 180 L 280 180 L 280 115 L 420 115 L 420 80" stroke="#00f5ff" strokeWidth="4" strokeDasharray="10,5" fill="none" strokeLinecap="round" opacity="0.9" />}
-                {/* Intersection nodes */}
-                {[{ x: 140, y: 80, d: 62 }, { x: 280, y: 80, d: 88 }, { x: 420, y: 80, d: 22, corridor: showCorridor }, { x: 140, y: 180, d: 45 }, { x: 280, y: 180, d: 29, corridor: showCorridor }, { x: 420, y: 180, d: 79 }, { x: 140, y: 290, d: 15, corridor: showCorridor }, { x: 280, y: 290, d: 55 }, { x: 420, y: 290, d: 91 }].map(({ x, y, d, corridor }, i) => {
-                    const fill = corridor ? 'rgba(0,255,157,0.9)' : d > 70 ? 'rgba(255,59,92,0.8)' : d > 40 ? 'rgba(255,184,0,0.8)' : 'rgba(0,245,255,0.8)';
-                    return <circle key={i} cx={x} cy={y} r={corridor ? 10 : 7} fill={fill} className={corridor ? 'animate-pulse-dot' : 'cursor-pointer'} />;
-                })}
-                {/* Ambulance */}
-                <text x={ambPos.x} y={ambPos.y} fontSize="16" textAnchor="middle">🚑</text>
-                {/* Hospital */}
-                <text x="420" y="72" fontSize="12" textAnchor="middle" fill="rgba(0,255,157,0.9)">🏥</text>
-                {/* Road labels */}
-                <text x="8" y="176" fontSize="8" fill="rgba(255,255,255,0.25)" fontFamily="JetBrains Mono">MG ROAD →</text>
-            </svg>
-            {/* Legend */}
-            <div className="absolute bottom-2 right-2 flex gap-2 bg-bg-deep/80 rounded-lg px-2 py-1 text-[0.65rem] text-text-muted">
-                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-accent-green inline-block" />Corridor</span>
-                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-accent-amber inline-block" />Med</span>
-                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-accent-red inline-block" />High</span>
-            </div>
-        </div>
-    );
-}
+/* CityMap removed — replaced by DelhiMap (react-leaflet, loaded dynamically) */
 
 /* ── Main Portal ── */
 export default function PortalPage() {
@@ -66,12 +40,18 @@ export default function PortalPage() {
     const [routeShown, setRouteShown] = useState(false);
     const [corridorActive, setCorridorActive] = useState(false);
     const [etaSec, setEtaSec] = useState(252);
-    const [ambPos, setAmbPos] = useState({ x: 100, y: 298 });
     const [showCorridor, setShowCorridor] = useState(false);
     const [auditLog, setAuditLog] = useState([]);
     const [calculating, setCalculating] = useState(false);
     const [initiating, setInitiating] = useState(false);
-    const rafRef = useRef(null);
+    const [activeNode, setActiveNode] = useState(null); // index of node ambulance is currently at
+
+    const handleNodeUpdate = useCallback((n) => {
+        setActiveNode(n);
+        const NODES = ['Dwarka Mor Chowk', 'Palam Vihar', 'Dhaula Kuan', 'Shankar Vihar', 'AIIMS Gate'];
+        if (n < NODES.length) addAudit('CORRIDOR', `🚑 Ambulance at ${NODES[n]}`);
+        else addAudit('CORRIDOR', '🏥 Ambulance arrived at AIIMS, New Delhi');
+    }, []);
 
     const addAudit = (type, msg) => {
         setAuditLog(prev => [{ type, msg, time: new Date().toLocaleTimeString() }, ...prev]);
@@ -84,23 +64,6 @@ export default function PortalPage() {
         return () => clearInterval(t);
     }, [corridorActive]);
 
-    // Ambulance map animation
-    const startAmb = () => {
-        const waypoints = [{ x: 140, y: 290 }, { x: 140, y: 180 }, { x: 280, y: 180 }, { x: 280, y: 115 }, { x: 420, y: 80 }];
-        let posX = 100, posY = 298, wpIdx = 0;
-        const step = () => {
-            if (wpIdx >= waypoints.length) return;
-            const { x: tx, y: ty } = waypoints[wpIdx];
-            const dx = tx - posX, dy = ty - posY;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < 2) { posX = tx; posY = ty; wpIdx++; }
-            else { posX += (dx / dist) * 1.5; posY += (dy / dist) * 1.5; }
-            setAmbPos({ x: posX, y: posY });
-            rafRef.current = requestAnimationFrame(step);
-        };
-        rafRef.current = requestAnimationFrame(step);
-    };
-    useEffect(() => () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); }, []);
 
     function handleLogin(e) {
         e.preventDefault();
@@ -113,28 +76,28 @@ export default function PortalPage() {
 
     function calcRoute() {
         setCalculating(true);
-        addAudit('ROUTE', 'Route calculation initiated: Sector 12 → City General Hospital');
+        addAudit('ROUTE', 'Route calculation initiated: Dwarka Sector 12 → AIIMS, New Delhi');
         setTimeout(() => {
             setCalculating(false);
             setRouteShown(true);
             setShowCorridor(true);
-            addAudit('ROUTE', 'AI path computed: 6 nodes · 4m 12s · 0 stops');
-            startAmb();
+            addAudit('ROUTE', 'AI path computed via OSRM: 5 nodes · 4m 12s · 0 stops');
         }, 2000);
     }
 
     function initiateWave() {
         setInitiating(true);
-        addAudit('CORRIDOR', '🚦 GREEN WAVE INITIATED — All 6 nodes preempting');
+        addAudit('CORRIDOR', '🚦 GREEN WAVE INITIATED — 5 Delhi nodes preempting');
         setTimeout(() => {
             setInitiating(false);
             setCorridorActive(true);
-            addAudit('CORRIDOR', '✅ Nodes N-05, N-06 turned GREEN · Preempting N-07, N-08');
+            addAudit('CORRIDOR', '✅ Dwarka Mor + Palam Vihar GREEN · Preempting Dhaula Kuan, Shankar Vihar');
         }, 2500);
     }
 
     function deactivate() {
         setCorridorActive(false);
+        setActiveNode(null);
         addAudit('CORRIDOR', '⛔ Corridor manually terminated by dispatcher');
     }
 
@@ -239,7 +202,7 @@ export default function PortalPage() {
                             <div className="flex flex-col gap-3.5">
                                 <div className="flex flex-col gap-1.5">
                                     <label className="text-[0.78rem] font-semibold text-text-secondary uppercase tracking-wide">Origin</label>
-                                    <input className="input-field" defaultValue="Sector 12, Accident Site" />
+                                    <input className="input-field" defaultValue="Dwarka Sector 12, New Delhi" />
                                 </div>
                                 <div className="flex items-center gap-2.5">
                                     <div className="flex-1 h-px bg-white/10" />
@@ -248,7 +211,7 @@ export default function PortalPage() {
                                 </div>
                                 <div className="flex flex-col gap-1.5">
                                     <label className="text-[0.78rem] font-semibold text-text-secondary uppercase tracking-wide">Destination</label>
-                                    <input className="input-field" defaultValue="City General Hospital" />
+                                    <input className="input-field" defaultValue="AIIMS Hospital, New Delhi" />
                                 </div>
                                 <div className="grid grid-cols-2 gap-3">
                                     <div className="flex flex-col gap-1.5">
@@ -257,10 +220,10 @@ export default function PortalPage() {
                                     </div>
                                     <div className="flex flex-col gap-1.5">
                                         <label className="text-[0.78rem] font-semibold text-text-secondary uppercase tracking-wide">Priority</label>
-                                        <select className="input-field">
-                                            <option>🔴 Critical (Cardiac Arrest)</option>
-                                            <option>🟠 High (Trauma)</option>
-                                            <option>🟡 Medium</option>
+                                        <select className="input-field" style={{ color: '#0f172a', background: '#ffffff' }}>
+                                            <option style={{ color: '#0f172a', background: '#ffffff' }}>🔴 Critical (Cardiac Arrest)</option>
+                                            <option style={{ color: '#0f172a', background: '#ffffff' }}>🟠 High (Trauma)</option>
+                                            <option style={{ color: '#0f172a', background: '#ffffff' }}>🟡 Medium</option>
                                         </select>
                                     </div>
                                 </div>
@@ -293,7 +256,7 @@ export default function PortalPage() {
                                     <div>
                                         <div className="text-[0.7rem] text-text-muted uppercase tracking-widest mb-2">Route Nodes (6 Intersections)</div>
                                         <div className="flex flex-col gap-1.5">
-                                            {[['N-05', 'Civil Lines × MG Rd', 'green', 'Ready'], ['N-06', 'Station Rd × Nehru Nagar', 'green', 'Ready'], ['N-07', 'MG Road × Park Street', 'amber', 'Queued'], ['N-08', 'Jubilee Hills × NH-65', 'amber', 'Queued'], ['N-09', 'Sec 12 × Residential', 'cyan', 'Standby'], ['H-01', 'City General Hospital', 'cyan', 'Standby']].map(([id, name, c, s]) => (
+                                            {[['N-05', 'Dwarka Mor Chowk', 'green', 'Ready'], ['N-06', 'Palam Vihar Intersection', 'green', 'Ready'], ['N-07', 'Dhaula Kuan Flyover', 'amber', 'Queued'], ['N-08', 'Shankar Vihar Junction', 'amber', 'Queued'], ['N-09', 'AIIMS Gate', 'cyan', 'Standby'], ['H-01', 'AIIMS, New Delhi', 'cyan', 'Standby']].map(([id, name, c, s]) => (
                                                 <div key={id} className="flex items-center gap-2.5 px-3 py-2 bg-white/[0.02] border border-white/5 rounded-lg text-xs">
                                                     <span className="text-accent-cyan font-mono">{id}</span><span className="text-text-secondary flex-1">{name}</span><Badge variant={c} className="text-[0.62rem]">{s}</Badge>
                                                 </div>
@@ -315,40 +278,60 @@ export default function PortalPage() {
                     <div className="flex flex-col gap-5">
                         <div className="bg-bg-card border border-white/5 rounded-xl p-6">
                             <div className="flex justify-between items-center mb-3">
-                                <div><h3 className="text-base font-bold">City Traffic Map</h3><p className="text-text-secondary text-xs">Live AI density overlay</p></div>
+                                <div><h3 className="text-base font-bold">Delhi Traffic Map</h3><p className="text-text-secondary text-xs">Live route · Dwarka → AIIMS via OSRM</p></div>
                                 <Badge variant="cyan"><StatusDot color="cyan" className="mr-1" />Live</Badge>
                             </div>
-                            <CityMap showCorridor={showCorridor} ambPos={ambPos} />
+                            <DelhiMap showCorridor={showCorridor} corridorActive={corridorActive} onNodeUpdate={handleNodeUpdate} />
                         </div>
 
                         {/* Corridor status */}
                         {corridorActive && (
                             <div className="bg-bg-card border border-white/5 rounded-xl p-6">
                                 <div className="flex justify-between items-center mb-4">
-                                    <div><Badge variant="red">🚨 GREEN WAVE ACTIVE</Badge><h3 className="mt-2 text-base font-bold">Corridor: AMB-042 → City Hospital</h3></div>
+                                    <div><Badge variant="red">🚨 GREEN WAVE ACTIVE</Badge><h3 className="mt-2 text-base font-bold">Corridor: AMB-042 → AIIMS, New Delhi</h3></div>
                                     <button onClick={deactivate} className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-[rgba(255,59,92,0.15)] text-accent-red border border-accent-red/30 font-sans cursor-pointer">⛔ Terminate</button>
                                 </div>
-                                {/* Timeline */}
+                                {/* Dynamic timeline — updates as ambulance moves */}
                                 <div className="flex flex-col gap-0">
-                                    {[
-                                        { label: 'Origin — Sector 12', status: '✓ Departed 4m ago', type: 'done' },
-                                        { label: 'N-05 · Civil Lines', status: '✓ Cleared', type: 'done' },
-                                        { label: 'N-06 · Station Rd', status: '✓ Cleared', type: 'done' },
-                                        { label: 'N-07 · MG Road', status: '🚑 In Transit', type: 'active' },
-                                        { label: 'N-08 · Jubilee Hills', status: `⏱ Preempting`, type: 'prep' },
-                                        { label: 'N-09 → Hospital', status: 'Queued', type: 'pending' },
-                                    ].map(({ label, status, type }, i, a) => (
-                                        <div key={label} className="flex items-start gap-3 relative pb-2">
-                                            {i < a.length - 1 && <div className={`absolute left-[7px] top-4 w-0.5 h-full ${type === 'done' ? 'bg-accent-green/30' : type === 'active' ? 'bg-accent-cyan/30' : 'bg-white/10'}`} />}
-                                            <div className={`w-4 h-4 rounded-full flex-shrink-0 border-2 mt-0.5 ${type === 'done' ? 'bg-accent-green border-accent-green/50' :
-                                                type === 'active' ? 'bg-accent-cyan border-accent-cyan shadow-neon-cyan animate-pulse-dot' :
-                                                    type === 'prep' ? 'bg-accent-amber border-accent-amber/50' : 'bg-[#334155] border-[#475569]'}`} />
-                                            <div>
-                                                <div className="text-sm font-semibold">{label}</div>
-                                                <div className={`text-xs mt-0.5 ${type === 'done' ? 'text-accent-green' : type === 'active' ? 'text-accent-cyan' : type === 'prep' ? 'text-accent-amber' : 'text-text-muted'}`}>{status}</div>
-                                            </div>
-                                        </div>
-                                    ))}
+                                    {(() => {
+                                        // All stops: origin + 5 nodes + destination
+                                        const stops = [
+                                            { label: 'Origin — Dwarka Sec 12', isOrigin: true },
+                                            { label: 'N-05 · Dwarka Mor Chowk', nodeIdx: 0 },
+                                            { label: 'N-06 · Palam Vihar', nodeIdx: 1 },
+                                            { label: 'N-07 · Dhaula Kuan', nodeIdx: 2 },
+                                            { label: 'N-08 · Shankar Vihar', nodeIdx: 3 },
+                                            { label: 'N-09 → AIIMS Gate', nodeIdx: 4 },
+                                        ];
+                                        return stops.map(({ label, isOrigin, nodeIdx }, i, a) => {
+                                            let type, status;
+                                            if (isOrigin) {
+                                                type = 'done'; status = '✓ Departed';
+                                            } else if (activeNode === null) {
+                                                type = 'pending'; status = 'Queued';
+                                            } else if (nodeIdx < activeNode) {
+                                                type = 'done'; status = '✓ Cleared';
+                                            } else if (nodeIdx === activeNode) {
+                                                type = 'active'; status = '🚑 In Transit';
+                                            } else if (nodeIdx === activeNode + 1) {
+                                                type = 'prep'; status = '⏱ Preempting';
+                                            } else {
+                                                type = 'pending'; status = 'Queued';
+                                            }
+                                            return (
+                                                <div key={label} className="flex items-start gap-3 relative pb-2">
+                                                    {i < a.length - 1 && <div className={`absolute left-[7px] top-4 w-0.5 h-full ${type === 'done' ? 'bg-accent-green/30' : type === 'active' ? 'bg-accent-cyan/30' : 'bg-white/10'}`} />}
+                                                    <div className={`w-4 h-4 rounded-full flex-shrink-0 border-2 mt-0.5 ${type === 'done' ? 'bg-accent-green border-accent-green/50' :
+                                                            type === 'active' ? 'bg-accent-cyan border-accent-cyan shadow-neon-cyan animate-pulse-dot' :
+                                                                type === 'prep' ? 'bg-accent-amber border-accent-amber/50' : 'bg-[#334155] border-[#475569]'}`} />
+                                                    <div>
+                                                        <div className="text-sm font-semibold">{label}</div>
+                                                        <div className={`text-xs mt-0.5 ${type === 'done' ? 'text-accent-green' : type === 'active' ? 'text-accent-cyan' : type === 'prep' ? 'text-accent-amber' : 'text-text-muted'}`}>{status}</div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        });
+                                    })()}
                                 </div>
                                 <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-white/10">
                                     {[['ETA', etaStr, 'text-accent-green'], ['Stops', '0', 'text-accent-green'], ['Time Saved', '7m 08s', 'text-accent-cyan']].map(([l, v, c]) => (

@@ -90,7 +90,7 @@ function HeroVisual() {
                 {/* Info overlay */}
                 <div className="absolute -bottom-12 left-0 right-0 flex justify-between items-center">
                     <div className="flex items-center gap-1.5 text-xs font-mono"><StatusDot color="green" /><span className="text-text-secondary">AI CAMERA ONLINE</span></div>
-                    <Badge variant="red" className={`transition-opacity ${pulse ? 'opacity-100' : 'opacity-30'}`}>🚨 AMBULANCE DETECTED</Badge>
+                    <Badge variant="red" className={`transition-opacity ${pulse ? 'opacity-100' : 'opacity-30'}`}>AMBULANCE DETECTED</Badge>
                 </div>
             </div>
             {/* Data panels */}
@@ -165,7 +165,7 @@ function PillarCard({ letter, badge, variant, title, desc, features, tags }) {
 /* ── Flow Panel ── */
 const FLOWS = [
     {
-        id: 0, label: '🚶 Commuter', badge: 'cyan', color: 'cyan',
+        id: 0, label: 'Commuter', badge: 'cyan', color: 'cyan',
         title: 'Everyday Commuter — Smart Routing',
         desc: 'The public-facing layer. Every citizen benefits from AI-optimized routing without any special access.',
         steps: [
@@ -176,7 +176,7 @@ const FLOWS = [
         ],
     },
     {
-        id: 1, label: '🚑 Ambulance', badge: 'red', color: 'red',
+        id: 1, label: 'Ambulance', badge: 'red', color: 'red',
         title: 'Verified Ambulance Dispatcher',
         desc: 'Planned Green Corridor — zero stops from accident site to hospital.',
         steps: [
@@ -187,7 +187,7 @@ const FLOWS = [
         ],
     },
     {
-        id: 2, label: '📷 Visual Override', badge: 'amber', color: 'amber',
+        id: 2, label: 'Visual Override', badge: 'amber', color: 'amber',
         title: 'Unexpected Emergency — Visual Failsafe',
         desc: 'No GPS, no portal — the Edge-AI camera detects the vehicle and acts autonomously.',
         steps: [
@@ -198,7 +198,7 @@ const FLOWS = [
         ],
     },
     {
-        id: 3, label: '🛡️ VVIP Convoy', badge: 'violet', color: 'violet',
+        id: 3, label: 'VVIP Convoy', badge: 'violet', color: 'violet',
         title: 'VVIP & Security Convoy Protocol',
         desc: 'Highest clearance tier — full route lock with extended buffers before and after the convoy.',
         steps: [
@@ -284,13 +284,13 @@ function FlowsSection() {
                                         <div className="cam-detect-box">Ambulance · 97.2%</div>
                                         <div className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-cyan to-transparent animate-scan-fast opacity-60" />
                                     </div>
-                                    <div className="flex gap-2 mt-3 flex-wrap"><Badge variant="red">🚨 OVERRIDE ACTIVE</Badge><Badge variant="amber">YELLOW → RED → GREEN</Badge></div>
+                                    <div className="flex gap-2 mt-3 flex-wrap"><Badge variant="red">OVERRIDE ACTIVE</Badge><Badge variant="amber">YELLOW → RED → GREEN</Badge></div>
                                 </>
                             )}
                             {flow.id === 3 && (
                                 <>
                                     <div className="text-[0.75rem] text-text-muted mb-2">CONVOY LOCK STATUS</div>
-                                    <div className="flex justify-center gap-2 my-3">{['🚔', '⭐', '🚔'].map((v, i) => <div key={i} className={`text-2xl bg-white/5 border rounded-lg px-3 py-2 ${i === 1 ? 'bg-[rgba(255,184,0,0.15)] border-accent-amber' : 'border-white/5'}`}>{v}</div>)}</div>
+                                    <div className="flex justify-center gap-2 my-3">{['[P]', '[VIP]', '[P]'].map((v, i) => <div key={i} className={`text-sm font-bold font-mono bg-white/5 border rounded-lg px-3 py-2 ${i === 1 ? 'bg-[rgba(255,184,0,0.15)] border-accent-amber text-accent-amber' : 'border-white/5 text-text-muted'}`}>{v}</div>)}</div>
                                     <div className="text-center text-xs text-[#a78bfa] mb-3">← Extended Buffer Zone →</div>
                                     <div className="grid grid-cols-2 gap-2">
                                         <div className="bg-[rgba(255,59,92,0.15)] border border-accent-red/30 rounded-lg p-3 text-center"><div className="text-[0.7rem] text-text-muted">Cross Traffic</div><div className="text-accent-red font-bold text-sm">HELD RED</div></div>
@@ -308,12 +308,12 @@ function FlowsSection() {
 
 /* ── FAQ ── */
 const FAQS = [
-    { q: '🚑 What if two ambulances approach from opposite directions?', a: 'The system assigns priority via a FIFO queue. If hospital integration is active, the vehicle carrying the more critical patient (e.g., Cardiac Arrest > Broken Arm) receives priority. The secondary ambulance gets a 3-second delayed corridor activation.' },
-    { q: '🌧️ What if the camera goes down or is covered in rain?', a: 'The system automatically detects a null or degraded camera feed and reverts to pre-programmed fixed-timer fallback mode. An alert is sent to the control center. Normal AI operation resumes automatically when the feed is restored.' },
-    { q: '🔒 How do we prevent abuse of the VVIP system?', a: 'Every "Green Corridor" request is immutably logged with a timestamp, user ID, GPS track, and session token. MFA is required for VVIP-tier access. All logs are auditable and tamper-evident.' },
-    { q: '📡 What if the internet connection is lost mid-corridor?', a: 'Each intersection node caches the corridor plan locally at activation. If cloud connectivity drops, the node executes its pre-cached green schedule autonomously until the last downloaded instruction expires, then defaults to safe fixed-timer mode.' },
-    { q: '🚶 Does this worsen pedestrian safety at crossings?', a: 'No. The algorithm enforces a non-negotiable minimum 15-second pedestrian phase regardless of vehicle density. Emergency overrides always trigger the 3-second yellow safety buffer, giving pedestrians time to clear.' },
-    { q: '⚖️ Is this scalable to an entire city?', a: 'Yes. Edge AI at each node means processing is distributed — no single server bottleneck. The central server only handles coordination signals (WebSocket messages), not video processing.' },
+    { q: 'What if two ambulances approach from opposite directions?', a: 'The system assigns priority via a FIFO queue. If hospital integration is active, the vehicle carrying the more critical patient (e.g., Cardiac Arrest > Broken Arm) receives priority. The secondary ambulance gets a 3-second delayed corridor activation.' },
+    { q: 'What if the camera goes down or is covered in rain?', a: 'The system automatically detects a null or degraded camera feed and reverts to pre-programmed fixed-timer fallback mode. An alert is sent to the control center. Normal AI operation resumes automatically when the feed is restored.' },
+    { q: 'How do we prevent abuse of the VVIP system?', a: 'Every "Green Corridor" request is immutably logged with a timestamp, user ID, GPS track, and session token. MFA is required for VVIP-tier access. All logs are auditable and tamper-evident.' },
+    { q: 'What if the internet connection is lost mid-corridor?', a: 'Each intersection node caches the corridor plan locally at activation. If cloud connectivity drops, the node executes its pre-cached green schedule autonomously until the last downloaded instruction expires, then defaults to safe fixed-timer mode.' },
+    { q: 'Does this worsen pedestrian safety at crossings?', a: 'No. The algorithm enforces a non-negotiable minimum 15-second pedestrian phase regardless of vehicle density. Emergency overrides always trigger the 3-second yellow safety buffer, giving pedestrians time to clear.' },
+    { q: 'Is this scalable to an entire city?', a: 'Yes. Edge AI at each node means processing is distributed — no single server bottleneck. The central server only handles coordination signals (WebSocket messages), not video processing.' },
 ];
 
 function FaqSection() {
@@ -365,7 +365,7 @@ export default function HomePage() {
                         </p>
                         <div className="flex flex-wrap gap-3 mb-12">
                             <a href="#pillars" className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl text-base font-bold bg-gradient-to-br from-accent-cyan to-[#0099cc] text-black shadow-[0_0_20px_rgba(0,245,255,0.3)] hover:shadow-[0_0_30px_rgba(0,245,255,0.6)] hover:-translate-y-px transition-all">Explore The Solution →</a>
-                            <Link href="/dashboard" className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl text-base font-bold bg-white/5 border border-white/5 hover:bg-white/10 hover:-translate-y-px transition-all no-underline text-text-primary">🖥 Live Dashboard</Link>
+                            <Link href="/dashboard" className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl text-base font-bold bg-white/5 border border-white/5 hover:bg-white/10 hover:-translate-y-px transition-all no-underline text-text-primary">Live Dashboard</Link>
                         </div>
                         {/* Stats bar */}
                         <div className="flex flex-wrap bg-white/[0.03] border border-white/5 rounded-xl overflow-hidden divide-x divide-white/5">
@@ -448,9 +448,9 @@ export default function HomePage() {
                     </div>
                     {/* Emergency Contacts */}
                     <div>
-                        <div className="text-[0.7rem] font-bold uppercase tracking-widest text-text-muted mb-4">🚨 Emergency Contacts</div>
+                        <div className="text-[0.7rem] font-bold uppercase tracking-widest text-text-muted mb-4">Emergency Contacts</div>
                         <div className="flex flex-col gap-2.5">
-                            {[['🚑 Ambulance (National)', '102'], ['🚒 Fire Brigade', '101'], ['👮 Police', '100'], ['🏥 AIIMS Delhi', '011-2658-8500'], ['🚑 GVK EMRI', '108']].map(([l, v]) => (
+                            {[['Ambulance (National)', '102'], ['Fire Brigade', '101'], ['Police', '100'], ['AIIMS Delhi', '011-2658-8500'], ['GVK EMRI', '108']].map(([l, v]) => (
                                 <div key={l} className="flex justify-between items-center text-xs border-b border-white/5 pb-2">
                                     <span className="text-text-secondary">{l}</span>
                                     <span className="font-mono font-bold text-accent-green">{v}</span>
@@ -460,7 +460,7 @@ export default function HomePage() {
                     </div>
                     {/* Cities */}
                     <div>
-                        <div className="text-[0.7rem] font-bold uppercase tracking-widest text-text-muted mb-4">🏙️ Target Cities</div>
+                        <div className="text-[0.7rem] font-bold uppercase tracking-widest text-text-muted mb-4">Target Cities</div>
                         <div className="grid grid-cols-2 gap-1.5">
                             {['Mumbai', 'Delhi', 'Bengaluru', 'Hyderabad', 'Chennai', 'Pune', 'Kolkata', 'Ahmedabad'].map(c => (
                                 <div key={c} className="flex items-center gap-1.5 text-xs text-text-secondary hover:text-accent-cyan transition-colors cursor-default">
@@ -471,13 +471,13 @@ export default function HomePage() {
                     </div>
                     {/* Quick Links */}
                     <div>
-                        <div className="text-[0.7rem] font-bold uppercase tracking-widest text-text-muted mb-4">🔗 Quick Access</div>
+                        <div className="text-[0.7rem] font-bold uppercase tracking-widest text-text-muted mb-4">Quick Access</div>
                         <div className="flex flex-col gap-2">
-                            <Link href="/dashboard" className="text-xs text-text-secondary hover:text-accent-cyan no-underline transition-colors">🖥 Live Dashboard</Link>
-                            <Link href="/portal" className="text-xs text-text-secondary hover:text-accent-cyan no-underline transition-colors">🔒 Green Corridor Portal</Link>
-                            <a href="#pillars" className="text-xs text-text-secondary hover:text-accent-cyan no-underline transition-colors">🏗 Three-Pillar Solution</a>
-                            <a href="#flows" className="text-xs text-text-secondary hover:text-accent-cyan no-underline transition-colors">🚶 User Journeys</a>
-                            <a href="#faq" className="text-xs text-text-secondary hover:text-accent-cyan no-underline transition-colors">❓ Edge Cases & FAQ</a>
+                            <Link href="/dashboard" className="text-xs text-text-secondary hover:text-accent-cyan no-underline transition-colors">Live Dashboard</Link>
+                            <Link href="/portal" className="text-xs text-text-secondary hover:text-accent-cyan no-underline transition-colors">Green Corridor Portal</Link>
+                            <a href="#pillars" className="text-xs text-text-secondary hover:text-accent-cyan no-underline transition-colors">Three-Pillar Solution</a>
+                            <a href="#flows" className="text-xs text-text-secondary hover:text-accent-cyan no-underline transition-colors">User Journeys</a>
+                            <a href="#faq" className="text-xs text-text-secondary hover:text-accent-cyan no-underline transition-colors">Edge Cases &amp; FAQ</a>
                         </div>
                     </div>
                 </div>
